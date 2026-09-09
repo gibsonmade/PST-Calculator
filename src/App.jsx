@@ -378,7 +378,7 @@ function Metric({ label, value, unfavorable = false, isLoading = false }) {
         skeletonClassName="mx-auto h-8 w-24"
       >
         <p
-          className={`text-2xl font-semibold tabular-nums ${
+          className={`text-2xl font-bold tabular-nums ${
             unfavorable ? "text-[#8a4e1d]" : "text-[#0a315d]"
           }`}
         >
