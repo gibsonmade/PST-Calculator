@@ -95,7 +95,9 @@ function CalculatorIntro() {
         Transmix-ID ROI Calculator
       </h1>
       <p className="mt-5 max-w-2xl text-lg leading-8 text-[#526275] text-pretty">
-        This is the input and summary the user would see.
+        This is the input and summary the user would see on the website. Check
+        the inputs "About your operation" are desired and outputs "Projected
+        Annual Net Savings" work properly.
       </p>
     </div>
   );
