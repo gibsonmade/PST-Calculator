@@ -83,6 +83,9 @@ function CalculatorIntro() {
       <h1 className="max-w-3xl text-4xl font-semibold leading-[1.05] tracking-normal text-balance sm:text-5xl lg:text-6xl">
         Transmix-ID ROI Calculator
       </h1>
+      <p className="mt-5 max-w-2xl text-lg leading-8 text-[#526275] text-pretty">
+        This is the input and summary the user would see.
+      </p>
     </div>
   );
 }
@@ -589,6 +592,10 @@ function CalculationWalkthrough({ inputs, result }) {
         <h1 className="text-4xl font-semibold tracking-normal text-balance sm:text-5xl">
           Calculations & Data
         </h1>
+        <p className="mt-5 max-w-3xl text-lg leading-8 text-[#526275] text-pretty">
+          Users will NOT see this information on the website. This information
+          is to illustrate how the above Net Savings Summary is calculated.
+        </p>
         <div className="mt-9 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
           {steps.map((step) => (
             <CalculationStep
