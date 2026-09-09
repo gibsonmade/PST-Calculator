@@ -332,7 +332,7 @@ function ImpactSummary({ result }) {
 
 function Metric({ label, value, unfavorable = false }) {
   return (
-    <div className="border-t border-[#d6e0e7] pt-4">
+    <div className="border-t border-[#d6e0e7] pt-4 text-center">
       <p
         className={`text-2xl font-semibold tabular-nums ${
           unfavorable ? "text-[#8a4e1d]" : "text-[#0a315d]"
