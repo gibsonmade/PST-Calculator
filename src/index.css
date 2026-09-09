@@ -81,11 +81,13 @@ input {
   background-image: linear-gradient(
     90deg,
     #dce7ed 0%,
-    #eef4f5 45%,
-    #dce7ed 90%
+    #e5eef2 42%,
+    #f2f6f7 50%,
+    #e5eef2 58%,
+    #dce7ed 100%
   );
-  background-size: 220% 100%;
-  animation: summary-skeleton-sweep 900ms cubic-bezier(0.2, 0, 0, 1) infinite;
+  background-size: 260% 100%;
+  animation: summary-skeleton-sweep 1600ms ease-in-out infinite;
 }
 
 @keyframes summary-skeleton-sweep {

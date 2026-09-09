@@ -34,7 +34,7 @@ export default function App() {
     window.clearTimeout(updateTimerRef.current);
     updateTimerRef.current = window.setTimeout(() => {
       setSummaryIsUpdating(false);
-    }, 520);
+    }, 900);
   }
 
   useEffect(() => {
