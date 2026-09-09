@@ -90,11 +90,11 @@ function CalculatorHeader() {
 
 function CalculatorIntro() {
   return (
-    <div className="max-w-4xl">
-      <h1 className="max-w-3xl text-4xl font-semibold leading-[1.05] tracking-normal text-balance sm:text-5xl lg:text-6xl">
+    <div>
+      <h1 className="text-4xl font-semibold leading-[1.05] tracking-normal text-balance sm:text-5xl lg:text-6xl">
         Transmix-ID ROI Calculator
       </h1>
-      <p className="mt-5 max-w-2xl text-lg leading-8 text-[#526275] text-pretty">
+      <p className="mt-5 text-lg leading-8 text-[#526275] text-pretty">
         This is the input and summary the user would see on the website. Check
         the inputs "About your operation" are desired and outputs "Projected
         Annual Net Savings" work properly.
@@ -648,7 +648,7 @@ function CalculationWalkthrough({ inputs, result }) {
         <h1 className="text-4xl font-semibold tracking-normal text-balance sm:text-5xl">
           Calculations & Data
         </h1>
-        <p className="mt-5 max-w-3xl text-lg leading-8 text-[#526275] text-pretty">
+        <p className="mt-5 text-lg leading-8 text-[#526275] text-pretty">
           Users will NOT see this information on the website. This information
           is to illustrate how the above Net Savings Summary is calculated.
         </p>
