@@ -175,7 +175,7 @@ function CalculatorForm({
         </div>
       </div>
 
-      <div className="mt-7 border-t border-[#dfe7ec] pt-6">
+      <div className="mt-7">
         <button
           type="button"
           onClick={onUpdateResults}
