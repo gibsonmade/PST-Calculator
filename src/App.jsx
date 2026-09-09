@@ -612,7 +612,7 @@ function CalculationStep({ step, onOpen }) {
     <button
       type="button"
       onClick={onOpen}
-      className="relative min-h-40 rounded-xl border border-[#d6e0e7] bg-[#fbfcfb] p-4 text-left transition-[border-color,background-color,transform] duration-150 hover:border-[#93b5c9] hover:bg-white active:scale-[0.96]"
+      className="relative min-h-40 cursor-pointer rounded-xl border border-[#d6e0e7] bg-[#fbfcfb] p-4 text-left transition-[border-color,background-color,transform] duration-150 hover:border-[#93b5c9] hover:bg-white active:scale-[0.96]"
     >
       <h3 className="text-base font-semibold">{step.title}</h3>
       <p className="mt-3 min-h-10 text-sm leading-5 text-[#526275] tabular-nums">
@@ -626,6 +626,17 @@ function CalculationStep({ step, onOpen }) {
 }
 
 function CalculationDrawer({ step, onClose }) {
+  useEffect(() => {
+    if (!step) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [step]);
+
   if (!step) return null;
 
   return (
@@ -644,12 +655,9 @@ function CalculationDrawer({ step, onClose }) {
         <div className="border-b border-[#d7e0e7] px-6 py-5">
           <div className="flex items-start justify-between gap-5">
             <div>
-              <p className="text-xs font-semibold tracking-[0.16em] text-[#667789]">
-                CALCULATION DETAIL
-              </p>
               <h2
                 id="calculation-drawer-title"
-                className="mt-2 text-2xl font-semibold text-[#071b34]"
+                className="text-2xl font-semibold text-[#071b34]"
               >
                 {step.title}
               </h2>
@@ -657,9 +665,10 @@ function CalculationDrawer({ step, onClose }) {
             <button
               type="button"
               onClick={onClose}
-              className="min-h-10 rounded-xl border border-[#cbd8e1] px-4 text-sm font-semibold text-[#0a315d] transition-[border-color,background-color,transform] duration-150 hover:border-[#93b5c9] hover:bg-[#f4f7f8] active:scale-[0.96]"
+              aria-label="Close calculation detail"
+              className="flex min-h-10 min-w-10 items-center justify-center rounded-xl border border-[#cbd8e1] px-3 text-2xl font-light leading-none text-[#0a315d] transition-[border-color,background-color,transform] duration-150 hover:border-[#93b5c9] hover:bg-[#f4f7f8] active:scale-[0.96]"
             >
-              Close
+              ×
             </button>
           </div>
         </div>
