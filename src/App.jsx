@@ -316,58 +316,79 @@ function ImpactSummary({ isUpdating, result }) {
       className="rounded-2xl border border-[#cfdae2] bg-[#f7faf9] p-5 text-center sm:p-6 lg:sticky lg:top-6"
       aria-labelledby="projected-impact"
     >
-      <div
-        className={`pointer-events-none -mx-5 -mt-5 mb-5 h-1 overflow-hidden rounded-t-2xl bg-[#d8e4ea] transition-opacity duration-150 sm:-mx-6 sm:-mt-6 sm:mb-6 ${
-          isUpdating ? "opacity-100" : "opacity-0"
-        }`}
-        aria-hidden="true"
-      >
-        <div className="summary-loading-bar h-full w-1/2 bg-[#15706b]" />
-      </div>
       <h2 id="projected-impact" className="text-2xl font-semibold">
         Projected Annual Net Savings
       </h2>
-      <p
-        className={`mt-7 text-5xl font-semibold leading-none tabular-nums sm:text-6xl lg:text-7xl ${
-          unfavorable ? "text-[#8a4e1d]" : "text-[#071b34]"
-        }`}
+      <LoadingValue
+        isLoading={isUpdating}
+        skeletonClassName="mx-auto mt-7 h-[3rem] w-56 sm:h-[3.75rem] sm:w-72 lg:h-[4.5rem]"
       >
-        {formatCurrency(result.netSavingsAnnual)}
-      </p>
+        <p
+          className={`mt-7 text-5xl font-semibold leading-none tabular-nums sm:text-6xl lg:text-7xl ${
+            unfavorable ? "text-[#8a4e1d]" : "text-[#071b34]"
+          }`}
+        >
+          {formatCurrency(result.netSavingsAnnual)}
+        </p>
+      </LoadingValue>
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         <Metric
           label="Projected Monthly Net Savings"
           value={formatCurrency(result.netSavingsMonthly)}
           unfavorable={result.netSavingsMonthly < 0}
+          isLoading={isUpdating}
         />
         <Metric
           label="Annual Transmix Reduction"
           value={`${formatNumber(result.bblReducedAnnual, 0)} BBL`}
+          isLoading={isUpdating}
         />
-        <Metric label="Projected ROI" value={formatRoiPercent(result.roiPercent)} />
+        <Metric
+          label="Projected ROI"
+          value={formatRoiPercent(result.roiPercent)}
+          isLoading={isUpdating}
+        />
       </div>
 
-      <ComparisonRows result={result} />
+      <ComparisonRows isLoading={isUpdating} result={result} />
     </section>
   );
 }
 
-function Metric({ label, value, unfavorable = false }) {
+function LoadingValue({ isLoading, skeletonClassName, children }) {
+  if (isLoading) {
+    return (
+      <div
+        className={`block rounded-xl bg-[#dce7ed] summary-skeleton ${skeletonClassName}`}
+        aria-hidden="true"
+      />
+    );
+  }
+
+  return children;
+}
+
+function Metric({ label, value, unfavorable = false, isLoading = false }) {
   return (
     <div className="border-t border-[#d6e0e7] pt-4 text-center">
-      <p
-        className={`text-2xl font-semibold tabular-nums ${
-          unfavorable ? "text-[#8a4e1d]" : "text-[#0a315d]"
-        }`}
+      <LoadingValue
+        isLoading={isLoading}
+        skeletonClassName="mx-auto h-8 w-24"
       >
-        {value}
-      </p>
+        <p
+          className={`text-2xl font-semibold tabular-nums ${
+            unfavorable ? "text-[#8a4e1d]" : "text-[#0a315d]"
+          }`}
+        >
+          {value}
+        </p>
+      </LoadingValue>
       <p className="mt-2 text-sm leading-5 text-[#526275]">{label}</p>
     </div>
   );
 }
 
-function ComparisonRows({ result }) {
+function ComparisonRows({ isLoading = false, result }) {
   const rows = [
     [
       "Projected Terminal Transmix Savings",
@@ -396,16 +417,30 @@ function ComparisonRows({ result }) {
           className="grid grid-cols-[1.1fr_1fr_1fr] gap-3 border-b border-[#edf2f4] px-4 py-3 transition-colors duration-150 hover:bg-[#f4faf8] last:border-b-0"
         >
           <span className="text-sm font-medium text-[#526275]">{label}</span>
-          <span className="text-right font-semibold tabular-nums">
-            {label === "Projected Yield Loss Improvement in BBL"
-              ? formatNumber(monthly, 0)
-              : formatCurrency(monthly)}
-          </span>
-          <span className="text-right font-semibold tabular-nums">
-            {label === "Projected Yield Loss Improvement in BBL"
-              ? formatNumber(annual, 0)
-              : formatCurrency(annual)}
-          </span>
+          <div className="text-right font-semibold tabular-nums">
+            <LoadingValue
+              isLoading={isLoading}
+              skeletonClassName="ml-auto h-5 w-20"
+            >
+              <span>
+                {label === "Projected Yield Loss Improvement in BBL"
+                  ? formatNumber(monthly, 0)
+                  : formatCurrency(monthly)}
+              </span>
+            </LoadingValue>
+          </div>
+          <div className="text-right font-semibold tabular-nums">
+            <LoadingValue
+              isLoading={isLoading}
+              skeletonClassName="ml-auto h-5 w-24"
+            >
+              <span>
+                {label === "Projected Yield Loss Improvement in BBL"
+                  ? formatNumber(annual, 0)
+                  : formatCurrency(annual)}
+              </span>
+            </LoadingValue>
+          </div>
         </div>
       ))}
     </div>
