@@ -326,7 +326,7 @@ function ImpactSummary({ isUpdating, result }) {
         skeletonClassName="mx-auto mt-7 h-[3rem] w-56 sm:h-[3.75rem] sm:w-72 lg:h-[4.5rem]"
       >
         <p
-          className={`mt-7 text-5xl font-black leading-none tabular-nums sm:text-6xl lg:text-7xl ${
+          className={`mt-7 text-5xl font-bold leading-none tabular-nums sm:text-6xl lg:text-7xl ${
             unfavorable ? "text-[#8a4e1d]" : "text-[#071b34]"
           }`}
         >
@@ -378,7 +378,7 @@ function Metric({ label, value, unfavorable = false, isLoading = false }) {
         skeletonClassName="mx-auto h-8 w-24"
       >
         <p
-          className={`text-2xl font-black tabular-nums ${
+          className={`text-2xl font-bold tabular-nums ${
             unfavorable ? "text-[#8a4e1d]" : "text-[#0a315d]"
           }`}
         >
