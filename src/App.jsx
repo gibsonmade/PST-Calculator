@@ -91,7 +91,7 @@ function CalculatorHeader() {
 function CalculatorIntro() {
   return (
     <div>
-      <h1 className="text-4xl font-semibold leading-[1.05] tracking-normal text-balance sm:text-5xl lg:text-6xl">
+      <h1 className="text-4xl font-black leading-[1.05] tracking-normal text-balance sm:text-5xl lg:text-6xl">
         Transmix-ID ROI Calculator
       </h1>
       <p className="mt-5 text-lg leading-8 text-[#526275] text-pretty">
@@ -645,7 +645,7 @@ function CalculationWalkthrough({ inputs, result }) {
   return (
     <section className="border-y border-[#d7e0e7] bg-white py-14">
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-        <h1 className="text-4xl font-semibold tracking-normal text-balance sm:text-5xl">
+        <h1 className="text-4xl font-black tracking-normal text-balance sm:text-5xl">
           Calculations & Data
         </h1>
         <p className="mt-5 text-lg leading-8 text-[#526275] text-pretty">
