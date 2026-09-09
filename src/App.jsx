@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   DEFAULT_INPUTS,
   calculateTransmix,
@@ -96,7 +96,7 @@ function CalculatorForm({
 }) {
   return (
     <section
-      className="rounded-lg border border-[#cfdae2] bg-white p-5 shadow-[0_18px_50px_rgba(7,27,52,0.06)] sm:p-6"
+      className="rounded-2xl border border-[#cfdae2] bg-white p-5 shadow-[0_18px_50px_rgba(7,27,52,0.06)] sm:p-6"
       aria-labelledby="operation-inputs"
     >
       <div>
@@ -179,7 +179,7 @@ function CalculatorForm({
         <button
           type="button"
           onClick={onUpdateResults}
-          className="min-h-12 w-full rounded-md bg-[#0a315d] px-5 text-base font-semibold text-white shadow-[0_10px_24px_rgba(7,27,52,0.14)] transition-transform active:scale-[0.96] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#0a70b8] sm:w-auto"
+          className="min-h-12 w-full rounded-xl bg-[#0a315d] px-5 text-base font-semibold text-white shadow-[0_10px_24px_rgba(7,27,52,0.14)] transition-transform active:scale-[0.96] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-[#0a70b8] sm:w-auto"
         >
           Update results
         </button>
@@ -199,7 +199,7 @@ function PipeSizeSelect({ value, error, onChange }) {
       <label htmlFor="pipeSizeInches" className="field-label">
         Average Pipe Size
       </label>
-      <div className="mt-2 flex min-h-12 overflow-hidden rounded-md border border-[#bac8d3] bg-white focus-within:border-[#0a70b8] focus-within:ring-4 focus-within:ring-[#0a70b8]/15">
+      <div className="mt-2 flex min-h-12 overflow-hidden rounded-xl border border-[#bac8d3] bg-white focus-within:border-[#0a70b8] focus-within:ring-4 focus-within:ring-[#0a70b8]/15">
         <select
           id="pipeSizeInches"
           value={value}
@@ -249,7 +249,7 @@ function NumericField({
       <label htmlFor={id} className="field-label">
         {label}
       </label>
-      <div className="mt-2 flex min-h-12 overflow-hidden rounded-md border border-[#bac8d3] bg-white focus-within:border-[#0a70b8] focus-within:ring-4 focus-within:ring-[#0a70b8]/15">
+      <div className="mt-2 flex min-h-12 overflow-hidden rounded-xl border border-[#bac8d3] bg-white focus-within:border-[#0a70b8] focus-within:ring-4 focus-within:ring-[#0a70b8]/15">
         <input
           id={id}
           type="number"
@@ -286,7 +286,7 @@ function NumericField({
 function ImpactSummary({ result }) {
   if (!result) {
     return (
-      <section className="rounded-lg border border-[#cfdae2] bg-[#f7faf9] p-6">
+      <section className="rounded-2xl border border-[#cfdae2] bg-[#f7faf9] p-6">
         <h2 className="text-2xl font-semibold">Projected impact</h2>
         <p className="mt-4 text-[#526275]">
           Complete the highlighted fields to see the live impact model.
@@ -299,7 +299,7 @@ function ImpactSummary({ result }) {
 
   return (
     <section
-      className="rounded-lg border border-[#cfdae2] bg-[#f7faf9] p-6 sm:p-8 lg:sticky lg:top-6"
+      className="rounded-2xl border border-[#cfdae2] bg-[#f7faf9] p-6 sm:p-8 lg:sticky lg:top-6"
       aria-labelledby="projected-impact"
     >
       <h2 id="projected-impact" className="text-2xl font-semibold">
@@ -362,7 +362,7 @@ function ComparisonRows({ result }) {
   ];
 
   return (
-    <div className="mt-9 overflow-hidden rounded-md border border-[#d2dde5] bg-white">
+    <div className="mt-9 overflow-hidden rounded-xl border border-[#d2dde5] bg-white">
       <div className="grid grid-cols-[1.1fr_1fr_1fr] border-b border-[#d2dde5] bg-[#eef4f5] px-4 py-3 text-xs font-bold tracking-[0.14em] text-[#526275]">
         <span>IMPACT</span>
         <span className="text-right">MONTHLY</span>
@@ -391,104 +391,310 @@ function ComparisonRows({ result }) {
 }
 
 function CalculationWalkthrough({ inputs, result }) {
+  const [selectedStep, setSelectedStep] = useState(null);
+
+  useEffect(() => {
+    if (!selectedStep) return undefined;
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") setSelectedStep(null);
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedStep]);
+
   if (!result) return null;
 
   const steps = [
-    [
-      "Pipe Selection",
-      `${inputs.pipeSizeInches}" pipe`,
-      `Calculated Fluid Volume: ${formatNumber(result.flowBblPerMinute, 1)} BBL/min`,
-    ],
-    [
-      "Yield Loss Time Reduction",
-      `${formatFlexible(inputs.transmixMinutesPerEvent, 2)} min x ${formatPercent(
+    {
+      title: "Pipe Selection",
+      formula: `${inputs.pipeSizeInches}" pipe`,
+      value: `Calculated Fluid Volume: ${formatNumber(result.flowBblPerMinute, 1)} BBL/min`,
+      detail:
+        "The Summary worksheet uses selected pipe size as calculated fluid volume in BBL per minute.",
+      rows: [
+        ["Selected pipe size", `${inputs.pipeSizeInches}"`],
+        ["Calculation", `Number(${inputs.pipeSizeInches})`],
+        ["Result", `${formatNumber(result.flowBblPerMinute, 1)} BBL/min`],
+      ],
+    },
+    {
+      title: "Yield Loss Time Reduction",
+      formula: `${formatFlexible(inputs.transmixMinutesPerEvent, 2)} min x ${formatPercent(
         inputs.yieldLossImprovementPct
       )}`,
-      `${formatFlexible(result.minutesReducedPerEvent, 2)} min reduced/event`,
-    ],
-    [
-      "Transmix Volume Reduction",
-      `${formatNumber(result.flowBblPerMinute, 2)} x ${formatFlexible(
+      value: `${formatFlexible(result.minutesReducedPerEvent, 2)} min reduced/event`,
+      detail:
+        "Projected minutes reduced per event are calculated from processing time and PST's yield-loss improvement assumption.",
+      rows: [
+        [
+          "Transmix processing time",
+          `${formatFlexible(inputs.transmixMinutesPerEvent, 2)} min/event`,
+        ],
+        ["Yield-loss improvement", formatPercent(inputs.yieldLossImprovementPct)],
+        [
+          "Calculation",
+          `${formatFlexible(inputs.transmixMinutesPerEvent, 2)} x ${formatPercent(
+            inputs.yieldLossImprovementPct
+          )}`,
+        ],
+        ["Result", `${formatFlexible(result.minutesReducedPerEvent, 2)} min/event`],
+      ],
+    },
+    {
+      title: "Transmix Volume Reduction",
+      formula: `${formatNumber(result.flowBblPerMinute, 2)} x ${formatFlexible(
         result.minutesReducedPerEvent,
         2
       )}`,
-      `${formatNumber(result.bblReducedPerEvent, 2)} BBL/event`,
-    ],
-    [
-      "Savings per Event",
-      `${formatNumber(result.bblReducedPerEvent, 2)} x ${formatCurrency(
+      value: `${formatNumber(result.bblReducedPerEvent, 2)} BBL/event`,
+      detail:
+        "Per-event barrel reduction multiplies calculated fluid volume by minutes saved per event.",
+      rows: [
+        ["Calculated fluid volume", `${formatNumber(result.flowBblPerMinute, 2)} BBL/min`],
+        ["Minutes saved", `${formatFlexible(result.minutesReducedPerEvent, 2)} min`],
+        [
+          "Calculation",
+          `${formatNumber(result.flowBblPerMinute, 2)} x ${formatFlexible(
+            result.minutesReducedPerEvent,
+            2
+          )}`,
+        ],
+        ["Result", `${formatNumber(result.bblReducedPerEvent, 2)} BBL/event`],
+      ],
+    },
+    {
+      title: "Savings per Event",
+      formula: `${formatNumber(result.bblReducedPerEvent, 2)} x ${formatCurrency(
         inputs.reprocessingCostPerBbl,
         { cents: true }
       )}`,
-      `${formatCurrency(result.grossSavingsPerEvent)}/event`,
-    ],
-    [
-      "Monthly Gross Savings",
-      `${formatCurrency(result.grossSavingsPerEvent)} x ${formatNumber(
+      value: `${formatCurrency(result.grossSavingsPerEvent)}/event`,
+      detail:
+        "Projected terminal transmix savings per event are barrel reduction multiplied by average reprocessing cost.",
+      rows: [
+        ["BBL reduced per event", `${formatNumber(result.bblReducedPerEvent, 2)} BBL`],
+        [
+          "Reprocessing cost",
+          `${formatCurrency(inputs.reprocessingCostPerBbl, { cents: true })}/BBL`,
+        ],
+        [
+          "Calculation",
+          `${formatNumber(result.bblReducedPerEvent, 2)} x ${formatCurrency(
+            inputs.reprocessingCostPerBbl,
+            { cents: true }
+          )}`,
+        ],
+        ["Result", `${formatCurrency(result.grossSavingsPerEvent)}/event`],
+      ],
+    },
+    {
+      title: "Monthly Gross Savings",
+      formula: `${formatCurrency(result.grossSavingsPerEvent)} x ${formatNumber(
         inputs.eventsPerMonth
       )} events`,
-      `${formatCurrency(result.grossSavingsMonthly)}/month`,
-    ],
-    [
-      "CMaaS Cost",
-      `${inputs.pipeSizeInches}" pipe reference`,
-      `${formatCurrency(result.cmaaSCostMonthly, { cents: true })}/month`,
-    ],
-    [
-      "Projected Monthly Savings",
-      `${formatCurrency(result.grossSavingsMonthly)} - ${formatCurrency(
+      value: `${formatCurrency(result.grossSavingsMonthly)}/month`,
+      detail:
+        "Monthly gross savings multiply projected savings per event by average transmix events per month.",
+      rows: [
+        ["Savings per event", formatCurrency(result.grossSavingsPerEvent)],
+        ["Events per month", formatNumber(inputs.eventsPerMonth, 0)],
+        [
+          "Calculation",
+          `${formatCurrency(result.grossSavingsPerEvent)} x ${formatNumber(
+            inputs.eventsPerMonth,
+            0
+          )}`,
+        ],
+        ["Result", `${formatCurrency(result.grossSavingsMonthly)}/month`],
+      ],
+    },
+    {
+      title: "CMaaS Cost",
+      formula: `${inputs.pipeSizeInches}" pipe reference`,
+      value: `${formatCurrency(result.cmaaSCostMonthly, { cents: true })}/month`,
+      detail:
+        "Monthly CMaaS cost comes from the PST 2-year CMaaS pricing table for the selected pipe size.",
+      rows: [
+        ["Selected pipe size", `${inputs.pipeSizeInches}"`],
+        ["Reference value", `${formatCurrency(result.cmaaSCostMonthly, { cents: true })}/month`],
+        ["Annualized value", `${formatCurrency(result.cmaaSCostAnnual, { cents: true })}/year`],
+      ],
+    },
+    {
+      title: "Projected Monthly Savings",
+      formula: `${formatCurrency(result.grossSavingsMonthly)} - ${formatCurrency(
         result.cmaaSCostMonthly,
         { cents: true }
       )}`,
-      `${formatCurrency(result.netSavingsMonthly)}/month`,
-    ],
-    [
-      "ROI",
-      `${formatCurrency(result.grossSavingsMonthly)} / ${formatCurrency(
+      value: `${formatCurrency(result.netSavingsMonthly)}/month`,
+      detail:
+        "Projected monthly savings subtract monthly CMaaS cost from monthly gross savings.",
+      rows: [
+        ["Monthly gross savings", formatCurrency(result.grossSavingsMonthly)],
+        ["Monthly CMaaS cost", formatCurrency(result.cmaaSCostMonthly, { cents: true })],
+        [
+          "Calculation",
+          `${formatCurrency(result.grossSavingsMonthly)} - ${formatCurrency(
+            result.cmaaSCostMonthly,
+            { cents: true }
+          )}`,
+        ],
+        ["Result", `${formatCurrency(result.netSavingsMonthly)}/month`],
+      ],
+    },
+    {
+      title: "ROI",
+      formula: `${formatCurrency(result.grossSavingsMonthly)} / ${formatCurrency(
         result.cmaaSCostMonthly,
         { cents: true }
       )}`,
-      `${formatNumber(result.roiPercent, 2)}% ~= ${formatRoiPercent(
+      value: `${formatNumber(result.roiPercent, 2)}% ~= ${formatRoiPercent(
         result.roiPercent
       )}`,
-    ],
-    [
-      "Annual Projection",
-      "Monthly values x 12",
-      `${formatCurrency(result.netSavingsAnnual)}/year`,
-    ],
+      detail:
+        "Projected ROI follows the client worksheet: gross savings divided by CMaaS cost, displayed as a percentage.",
+      rows: [
+        ["Monthly gross savings", formatCurrency(result.grossSavingsMonthly)],
+        ["Monthly CMaaS cost", formatCurrency(result.cmaaSCostMonthly, { cents: true })],
+        [
+          "Calculation",
+          `${formatCurrency(result.grossSavingsMonthly)} / ${formatCurrency(
+            result.cmaaSCostMonthly,
+            { cents: true }
+          )}`,
+        ],
+        ["Precise result", `${formatNumber(result.roiPercent, 2)}%`],
+        ["Displayed result", formatRoiPercent(result.roiPercent)],
+      ],
+    },
+    {
+      title: "Annual Projection",
+      formula: "Monthly values x 12",
+      value: `${formatCurrency(result.netSavingsAnnual)}/year`,
+      detail:
+        "Annual values are produced by multiplying monthly Summary worksheet outputs by 12.",
+      rows: [
+        ["Monthly projected savings", formatCurrency(result.netSavingsMonthly)],
+        ["Calculation", `${formatCurrency(result.netSavingsMonthly)} x 12`],
+        ["Annual projected savings", `${formatCurrency(result.netSavingsAnnual)}/year`],
+      ],
+    },
   ];
 
   return (
     <section className="border-y border-[#d7e0e7] bg-white py-14">
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-        <h2 className="text-3xl font-semibold">Where each result comes from</h2>
+        <h1 className="text-4xl font-semibold tracking-normal text-balance sm:text-5xl">
+          Calculations & Data
+        </h1>
         <div className="mt-9 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-          {steps.map(([title, formula, value]) => (
+          {steps.map((step) => (
             <CalculationStep
-              key={title}
-              title={title}
-              formula={formula}
-              value={value}
+              key={step.title}
+              step={step}
+              onOpen={() => setSelectedStep(step)}
             />
           ))}
         </div>
       </div>
+      <CalculationDrawer
+        step={selectedStep}
+        onClose={() => setSelectedStep(null)}
+      />
     </section>
   );
 }
 
-function CalculationStep({ title, formula, value }) {
+function CalculationStep({ step, onOpen }) {
   return (
-    <article className="relative min-h-40 rounded-md border border-[#d6e0e7] bg-[#fbfcfb] p-4">
-      <h3 className="text-base font-semibold">{title}</h3>
+    <button
+      type="button"
+      onClick={onOpen}
+      className="relative min-h-40 rounded-xl border border-[#d6e0e7] bg-[#fbfcfb] p-4 text-left transition-[border-color,background-color,transform] duration-150 hover:border-[#93b5c9] hover:bg-white active:scale-[0.96]"
+    >
+      <h3 className="text-base font-semibold">{step.title}</h3>
       <p className="mt-3 min-h-10 text-sm leading-5 text-[#526275] tabular-nums">
-        {formula}
+        {step.formula}
       </p>
       <p className="mt-4 border-t border-[#dbe5ea] pt-3 text-lg font-semibold tabular-nums text-[#0a315d]">
-        {value}
+        {step.value}
       </p>
-    </article>
+    </button>
+  );
+}
+
+function CalculationDrawer({ step, onClose }) {
+  if (!step) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-[#071b34]/30"
+      role="presentation"
+      onMouseDown={onClose}
+    >
+      <aside
+        className="ml-auto flex h-full w-full max-w-xl flex-col bg-white shadow-[0_24px_80px_rgba(7,27,52,0.22)]"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="calculation-drawer-title"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <div className="border-b border-[#d7e0e7] px-6 py-5">
+          <div className="flex items-start justify-between gap-5">
+            <div>
+              <p className="text-xs font-semibold tracking-[0.16em] text-[#667789]">
+                CALCULATION DETAIL
+              </p>
+              <h2
+                id="calculation-drawer-title"
+                className="mt-2 text-2xl font-semibold text-[#071b34]"
+              >
+                {step.title}
+              </h2>
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="min-h-10 rounded-xl border border-[#cbd8e1] px-4 text-sm font-semibold text-[#0a315d] transition-[border-color,background-color,transform] duration-150 hover:border-[#93b5c9] hover:bg-[#f4f7f8] active:scale-[0.96]"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-6 py-6">
+          <p className="text-sm leading-7 text-[#526275]">{step.detail}</p>
+
+          <div className="mt-7 rounded-xl border border-[#d6e0e7] bg-[#fbfcfb] p-5">
+            <p className="text-xs font-semibold tracking-[0.14em] text-[#667789]">
+              CURRENT FORMULA
+            </p>
+            <p className="mt-3 text-lg font-semibold leading-7 text-[#071b34] tabular-nums">
+              {step.formula}
+            </p>
+            <p className="mt-4 border-t border-[#dbe5ea] pt-4 text-2xl font-semibold text-[#0a315d] tabular-nums">
+              {step.value}
+            </p>
+          </div>
+
+          <dl className="mt-7">
+            {step.rows.map(([label, value]) => (
+              <div
+                key={`${label}-${value}`}
+                className="grid grid-cols-[minmax(0,1fr)_auto] gap-5 border-b border-[#edf2f4] py-4"
+              >
+                <dt className="text-sm leading-6 text-[#526275]">{label}</dt>
+                <dd className="text-right text-sm font-semibold leading-6 text-[#071b34] tabular-nums">
+                  {value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </aside>
+    </div>
   );
 }
 
@@ -579,7 +785,7 @@ function ResultMatrix({ result }) {
   ];
 
   return (
-    <div className="mt-8 overflow-hidden rounded-md border border-[#cbd8e1] bg-white">
+    <div className="mt-8 overflow-hidden rounded-xl border border-[#cbd8e1] bg-white">
       <div className="result-grid-header grid grid-cols-[1.35fr_0.8fr_0.8fr_0.8fr] border-b border-[#d2dde5] bg-[#eef4f5] px-4 py-3 text-xs font-bold tracking-[0.12em] text-[#526275]">
         <span>PROJECTED RESULTS</span>
         <span className="text-right">PER EVENT</span>
@@ -635,14 +841,9 @@ function ReferenceDataTable({ selectedPipe }) {
     <section className="border-y border-[#d7e0e7] bg-[#f3f7f7] py-14">
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
         <h2 className="text-3xl font-semibold">PST Reference Data</h2>
-        <p className="mt-4 max-w-3xl leading-7 text-[#526275]">
-          Pipe size determines the calculated fluid volume and CMaaS price used
-          by the Summary worksheet model. These values come directly from PST's
-          pricing workbook.
-        </p>
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_0.65fr]">
-          <div className="overflow-hidden rounded-md border border-[#cbd8e1] bg-white">
+          <div className="overflow-hidden rounded-xl border border-[#cbd8e1] bg-white">
             <table className="w-full border-collapse text-left text-sm">
               <thead className="bg-[#0a315d] text-white">
                 <tr>
@@ -722,7 +923,7 @@ function ReferenceDataTable({ selectedPipe }) {
 
 function ReferenceGroup({ title, items }) {
   return (
-    <div className="rounded-md border border-[#cbd8e1] bg-white p-5">
+    <div className="rounded-xl border border-[#cbd8e1] bg-white p-5">
       <h3 className="text-base font-semibold">{title}</h3>
       <ul className="mt-3 space-y-2">
         {items.map((item) => (
