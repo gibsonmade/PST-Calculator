@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   DEFAULT_INPUTS,
   calculateTransmix,
@@ -20,6 +20,8 @@ import {
 export default function App() {
   const [inputs, setInputs] = useState(DEFAULT_INPUTS);
   const [resultsUpdateCount, setResultsUpdateCount] = useState(0);
+  const [summaryIsUpdating, setSummaryIsUpdating] = useState(false);
+  const updateTimerRef = useRef(null);
   const parsed = useMemo(() => parseInputs(inputs), [inputs]);
   const result = useMemo(
     () => (parsed.isValid ? calculateTransmix(parsed.values) : null),
@@ -28,7 +30,16 @@ export default function App() {
 
   function updateInput(key, value) {
     setInputs((current) => ({ ...current, [key]: value }));
+    setSummaryIsUpdating(true);
+    window.clearTimeout(updateTimerRef.current);
+    updateTimerRef.current = window.setTimeout(() => {
+      setSummaryIsUpdating(false);
+    }, 520);
   }
+
+  useEffect(() => {
+    return () => window.clearTimeout(updateTimerRef.current);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#fbfcfb] text-[#071b34]">
@@ -46,7 +57,7 @@ export default function App() {
               }
               resultsUpdateCount={resultsUpdateCount}
             />
-            <ImpactSummary result={result} />
+            <ImpactSummary isUpdating={summaryIsUpdating} result={result} />
           </div>
         </section>
 
@@ -286,7 +297,7 @@ function NumericField({
   );
 }
 
-function ImpactSummary({ result }) {
+function ImpactSummary({ isUpdating, result }) {
   if (!result) {
     return (
       <section className="rounded-2xl border border-[#cfdae2] bg-[#f7faf9] p-6">
@@ -305,6 +316,14 @@ function ImpactSummary({ result }) {
       className="rounded-2xl border border-[#cfdae2] bg-[#f7faf9] p-5 text-center sm:p-6 lg:sticky lg:top-6"
       aria-labelledby="projected-impact"
     >
+      <div
+        className={`pointer-events-none -mx-5 -mt-5 mb-5 h-1 overflow-hidden rounded-t-2xl bg-[#d8e4ea] transition-opacity duration-150 sm:-mx-6 sm:-mt-6 sm:mb-6 ${
+          isUpdating ? "opacity-100" : "opacity-0"
+        }`}
+        aria-hidden="true"
+      >
+        <div className="summary-loading-bar h-full w-1/2 bg-[#15706b]" />
+      </div>
       <h2 id="projected-impact" className="text-2xl font-semibold">
         Projected Annual Net Savings
       </h2>

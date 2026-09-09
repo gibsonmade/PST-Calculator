@@ -77,6 +77,27 @@ input {
   text-wrap: pretty;
 }
 
+.summary-loading-bar {
+  animation: summary-loading-sweep 520ms cubic-bezier(0.2, 0, 0, 1);
+  transform-origin: left center;
+}
+
+@keyframes summary-loading-sweep {
+  0% {
+    transform: translateX(-100%) scaleX(0.35);
+    opacity: 0.35;
+  }
+
+  45% {
+    opacity: 0.85;
+  }
+
+  100% {
+    transform: translateX(220%) scaleX(1);
+    opacity: 0.15;
+  }
+}
+
 @media (max-width: 640px) {
   .result-grid-header {
     display: none;
@@ -127,5 +148,9 @@ input {
   *::before,
   *::after {
     scroll-behavior: auto !important;
+  }
+
+  .summary-loading-bar {
+    animation: none;
   }
 }
