@@ -371,7 +371,7 @@ function ComparisonRows({ result }) {
       {rows.map(([label, monthly, annual]) => (
         <div
           key={label}
-          className="grid grid-cols-[1.1fr_1fr_1fr] gap-3 border-b border-[#edf2f4] px-4 py-3 last:border-b-0"
+          className="grid grid-cols-[1.1fr_1fr_1fr] gap-3 border-b border-[#edf2f4] px-4 py-3 transition-colors duration-150 hover:bg-[#f4faf8] last:border-b-0"
         >
           <span className="text-sm font-medium text-[#526275]">{label}</span>
           <span className="text-right font-semibold tabular-nums">
@@ -692,7 +692,7 @@ function CalculationDrawer({ step, onClose }) {
             {step.rows.map(([label, value]) => (
               <div
                 key={`${label}-${value}`}
-                className="grid grid-cols-[minmax(0,1fr)_auto] gap-5 border-b border-[#edf2f4] py-4"
+                className="grid grid-cols-[minmax(0,1fr)_auto] gap-5 border-b border-[#edf2f4] py-4 transition-colors duration-150 hover:bg-[#f4faf8]"
               >
                 <dt className="text-sm leading-6 text-[#526275]">{label}</dt>
                 <dd className="text-right text-sm font-semibold leading-6 text-[#071b34] tabular-nums">
@@ -804,7 +804,7 @@ function ResultMatrix({ result }) {
       {rows.map(([label, perEvent, monthly, annual]) => (
         <div
           key={label}
-          className="result-grid grid grid-cols-[1.35fr_0.8fr_0.8fr_0.8fr] gap-3 border-b border-[#edf2f4] px-4 py-3 last:border-b-0"
+          className="result-grid grid grid-cols-[1.35fr_0.8fr_0.8fr_0.8fr] gap-3 border-b border-[#edf2f4] px-4 py-3 transition-colors duration-150 hover:bg-[#f4faf8] last:border-b-0"
         >
           <span className="text-sm font-medium text-[#526275]">{label}</span>
           <span className="text-right text-sm font-semibold tabular-nums">
@@ -832,7 +832,7 @@ function BreakdownList({ title, rows }) {
         {rows.map(([label, value]) => (
           <div
             key={label}
-            className="grid grid-cols-[minmax(0,1fr)_auto] gap-4 border-b border-[#edf2f4] py-3"
+            className="grid grid-cols-[minmax(0,1fr)_auto] gap-4 border-b border-[#edf2f4] py-3 transition-colors duration-150 hover:bg-[#f4faf8]"
           >
             <dt className="text-sm leading-6 text-[#526275]">{label}</dt>
             <dd className="text-right text-sm font-semibold leading-6 tabular-nums">
@@ -876,8 +876,8 @@ function ReferenceDataTable({ selectedPipe }) {
                       key={pipe}
                       className={
                         selected
-                          ? "bg-[#e7f2ef] text-[#071b34]"
-                          : "border-t border-[#edf2f4]"
+                          ? "bg-[#e7f2ef] text-[#071b34] transition-colors duration-150 hover:bg-[#dcece8]"
+                          : "border-t border-[#edf2f4] transition-colors duration-150 hover:bg-[#f4faf8]"
                       }
                     >
                       <th scope="row" className="px-4 py-3 font-semibold">
