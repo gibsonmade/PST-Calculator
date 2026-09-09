@@ -36,7 +36,7 @@ export default function App() {
       <main>
         <section className="mx-auto max-w-7xl px-5 pb-12 pt-10 sm:px-8 lg:px-10">
           <CalculatorIntro />
-          <div className="mt-10 grid gap-8 lg:grid-cols-2 lg:items-start">
+          <div className="mt-16 grid gap-8 lg:mt-20 lg:grid-cols-2 lg:items-start">
             <CalculatorForm
               calculatorInputs={inputs}
               calculatorErrors={parsed.errors}
