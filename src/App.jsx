@@ -299,7 +299,7 @@ function ImpactSummary({ result }) {
 
   return (
     <section
-      className="rounded-2xl border border-[#cfdae2] bg-[#f7faf9] p-6 sm:p-8 lg:sticky lg:top-6"
+      className="rounded-2xl border border-[#cfdae2] bg-[#f7faf9] p-5 sm:p-6 lg:sticky lg:top-6"
       aria-labelledby="projected-impact"
     >
       <h2 id="projected-impact" className="text-2xl font-semibold">
